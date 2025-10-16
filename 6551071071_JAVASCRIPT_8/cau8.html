@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Máy tính đơn giản</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    body { margin: 30px; font-size: 18px; }
+    input[type="number"], input[type="text"] { width: 80px; text-align: center; }
+    button { padding: 5px 10px; margin: 3px; font-weight: bold; }
+</style>
+<script>
+$(document).ready(function(){
+    let operator = "";
+    $(".op").click(function(){
+        operator = $(this).text();
+    });
+
+    $("#equal").click(function(){
+        const a = parseFloat($("#num1").val());
+        const b = parseFloat($("#num2").val());
+        let result = "";
+
+        if (isNaN(a) || isNaN(b) || operator === "") {
+            alert("Nhập đủ 2 số và chọn phép toán!");
+            return;
+        }
+
+        switch(operator){
+            case '+': result = a + b; break;
+            case '-': result = a - b; break;
+            case 'x': result = a * b; break;
+            case '/': result = b !== 0 ? a / b : "Lỗi chia 0"; break;
+            case '^': result = Math.pow(a, b); break;
+        }
+        $("#result").val(result);
+    });
+});
+</script>
+</head>
+<body>
+<h3>Máy tính đơn giản</h3>
+<input type="number" id="num1">
+<button class="op">+</button>
+<button class="op">-</button>
+<button class="op">x</button>
+<button class="op">/</button>
+<button class="op">^</button>
+<input type="number" id="num2">
+<button id="equal">=</button>
+<input type="text" id="result" readonly>
+</body>
+</html>

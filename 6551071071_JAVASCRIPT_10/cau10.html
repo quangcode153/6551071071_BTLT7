@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Máy tính đơn giản</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    body {
+        background-color: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+    }
+    .calculator {
+        display: inline-block;
+        border: 4px ridge #ccc;
+        padding: 10px;
+        background: #f3f3f3;
+    }
+    input[type="text"] {
+        width: 220px;
+        height: 30px;
+        text-align: right;
+        margin-bottom: 10px;
+        font-size: 18px;
+    }
+    input[type="button"] {
+        width: 50px;
+        height: 40px;
+        margin: 3px;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+    input[type="button"]:hover {
+        background-color: #d0e4ff;
+    }
+</style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        <br>
+        <div>
+            <input type="button" value="1">
+            <input type="button" value="2">
+            <input type="button" value="3">
+            <input type="button" value="+">
+        </div>
+        <div>
+            <input type="button" value="4">
+            <input type="button" value="5">
+            <input type="button" value="6">
+            <input type="button" value="-">
+        </div>
+        <div>
+            <input type="button" value="7">
+            <input type="button" value="8">
+            <input type="button" value="9">
+            <input type="button" value="×">
+        </div>
+        <div>
+            <input type="button" value="C">
+            <input type="button" value="0">
+            <input type="button" value="=">
+            <input type="button" value="÷">
+        </div>
+    </div>
+
+<script>
+$(document).ready(function(){
+    $("input[type='button']").click(function(){
+        const value = $(this).val();
+        let display = $("#display");
+
+        if(value === "C") {
+            display.val("");
+        } else if(value === "=") {
+            try {
+                let expr = display.val()
+                    .replace(/×/g, "*")
+                    .replace(/÷/g, "/");
+                
+                if(!/^\s*\d+(\.\d+)?\s*[\+\-\*\/]\s*\d+(\.\d+)?\s*$/.test(expr)) {
+                    alert("Biểu thức không hợp lệ!");
+                    return;
+                }
+                display.val(eval(expr));
+            } catch {
+                alert("Lỗi cú pháp!");
+            }
+        } else {
+            display.val(display.val() + value);
+        }
+    });
+
+    $(document).on("keydown", function(e){
+        const key = e.key;
+        let display = $("#display");
+        if(/[0-9\+\-\*\/]/.test(key)) {
+            display.val(display.val() + key);
+        } else if(key === "Enter") {
+            $("input[value='=']").click();
+        } else if(key === "Escape") {
+            $("input[value='C']").click();
+        }
+    });
+});
+</script>
+</body>
+</html>

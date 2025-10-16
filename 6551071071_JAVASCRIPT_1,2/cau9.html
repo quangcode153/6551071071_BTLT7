@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Exercise - Table Layout</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        body{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Personal Information</h2>
+    <form id="personalForm">
+        <table>
+            <thead>
+                
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label for="name">Enter name: <span class="required">*</span></label></td>
+                    <td><input type="text" id="name" name="name"></td>
+                </tr>
+                <tr>
+                    <td><label>Sex: <span class="required">*</span></label></td>
+                    <td>
+                        <div class="radio-group">
+                            <input type="radio" id="male" name="sex" value="Male">
+                            <label for="male">Male</label>
+                            <input type="radio" id="female" name="sex" value="Female">
+                            <label for="female">Female</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="email">Enter email address: <span class="required">*</span></label></td>
+                    <td><input type="email" id="email" name="email"></td>
+                </tr>
+                <tr>
+                    <td><label for="birthday">Enter birthday (MM/DD/YYYY): <span class="required">*</span></label></td>
+                    <td><input type="text" id="birthday" name="birthday" placeholder="MM/DD/YYYY"></td>
+                </tr>
+                <tr>
+                    <td><label for="street">Enter street address (line 1): <span class="required">*</span></label></td>
+                    <td><input type="text" id="street" name="street"></td>
+                </tr>
+                <tr>
+                    <td><label for="city">Enter city: <span class="required">*</span></label></td>
+                    <td><input type="text" id="city" name="city"></td>
+                </tr>
+                <tr>
+                    <td><label for="region">Select a region: <span class="required">*</span></label></td>
+                    <td>
+                        <select id="region" name="region">
+                            <option value="">-- Select --</option>
+                            <option value="North">North</option>
+                            <option value="South">South</option>
+                            <option value="East">East</option>
+                            <option value="West">West</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="zip">Enter 5-digit ZIP code: <span class="required">*</span></label></td>
+                    <td><input type="text" id="zip" name="zip" maxlength="5"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <button type="button" id="finished">Finished</button>
+                        <button type="button" id="clear">Clear</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <script>
+        $(document).ready(function() {
+            function validateEmail(email) {
+                const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return pattern.test(email);
+            }
+            function validateBirthday(birthday) {
+                const pattern = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/(19|20)\d{2}$/;
+                if (!pattern.test(birthday)) return false;
+                const [month, day, year] = birthday.split('/').map(Number);
+                const date = new Date(year, month - 1, day);
+                return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day &&
+                       year >= 1900 && year <= 2025;
+            }
+            function validateZip(zip) {
+                return /^\d{5}$/.test(zip);
+            }
+            $('#finished').click(function() {
+                let errors = [];
+
+                if (!$('#name').val().trim()) errors.push('Name is required.');
+                if (!$('input[name="sex"]:checked').val()) errors.push('Sex is required.');
+                if (!$('#email').val().trim() || !validateEmail($('#email').val())) errors.push('Valid email is required.');
+                if (!$('#birthday').val().trim() || !validateBirthday($('#birthday').val())) errors.push('Valid birthday (MM/DD/YYYY) is required.');
+                if (!$('#street').val().trim()) errors.push('Street address is required.');
+                if (!$('#city').val().trim()) errors.push('City is required.');
+                if (!$('#region').val()) errors.push('Region is required.');
+                if (!$('#zip').val().trim() || !validateZip($('#zip').val())) errors.push('5-digit ZIP code is required.');
+
+                if (errors.length > 0) {
+                    alert('Validation Error:\n' + errors.join('\n'));
+                } else {
+                    const data = {
+                        Name: $('#name').val(),
+                        Sex: $('input[name="sex"]:checked').val(),
+                        Email: $('#email').val(),
+                        Birthday: $('#birthday').val(),
+                        Street: $('#street').val(),
+                        City: $('#city').val(),
+                        Region: $('#region').val(),
+                        ZIP: $('#zip').val()
+                    };
+                    alert('Form validated successfully!\n' + JSON.stringify(data, null, 2));
+                }
+            });
+
+            $('#clear').click(function() {
+                $('#personalForm')[0].reset();
+            });
+        });
+    </script>
+</body>
+</html>
